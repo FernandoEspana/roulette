@@ -1,3 +1,4 @@
+const { listenerCount } = require('../models/roulette.model');
 const Roulette = require('../models/roulette.model');
 const { randomNumber, returnColor } = require('../utils/bet-process');
 
@@ -54,4 +55,12 @@ module.exports = {
       res.status(400).json({message: 'Roulette did not found'});
     }
   },
+  async list(req, res) {
+    try {
+      const roulettes = await Roulette.find().populate('betIDs');
+      res.status(200).json(roulettes); 
+    } catch (error) {
+      res.status(400).json({ message: 'Roulettes request present some error'});
+    }
+  }
 }
