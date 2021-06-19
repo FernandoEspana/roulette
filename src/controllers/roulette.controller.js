@@ -1,4 +1,5 @@
 const Roulette = require('../models/roulette.model');
+const { randomNumber, returnColor } = require('../utils/bet-process');
 
 module.exports = {
   async create(req, res) {
@@ -24,12 +25,33 @@ module.exports = {
   },
   async close(req, res) {
     const { params:{ rouletteId } } = req;
+    const winnerNumber = randomNumber();
+    const winnerColor = returnColor(winnerNumber);
+    const body = { state: false };
+    
     try {
       const roulette = await Roulette.findById(rouletteId).populate('betIDs');
-      console.log(roulette);
-      res.status(200).json(roulette);
+      if( !roulette.state ) {
+        return res.status(400).json({ message: 'Roulette is closed!!'});
+      } 
+      const results = roulette.betIDs.map(bet => {
+        let status, earnings;
+        if( bet.betNumber === winnerNumber ){
+          status = 'WIN';
+          earnings = bet.amount * 5;
+        } else if ( bet.color === winnerColor ){
+          status = 'WIN';
+          earnings = bet.amount * 1.8;
+        } else {
+          status = 'LOSE';
+          earnings = 0;
+        }
+        return { status, earnings, bet };
+      });
+      await Roulette.findByIdAndUpdate(rouletteId, body, {new: true});
+      res.status(200).json({ winnerNumber, winnerColor, results });
     } catch (error) {
-      res.status(400).json({message: 'Roullete did not found'});
+      res.status(400).json({message: 'Roulette did not found'});
     }
-  }
+  },
 }

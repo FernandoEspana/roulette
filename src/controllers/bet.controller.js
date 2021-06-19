@@ -9,7 +9,10 @@ module.exports = {
     const { rouletteId } = req.params;
       
     try {
-
+      const roulette = await Roulette.findById(rouletteId);
+      if( !roulette.state ){
+        return res.status(400).json({ message:'Roulette is closed!!'});
+      }
       const bet = await Bet.create({
         userId,
         amount,
@@ -17,7 +20,6 @@ module.exports = {
         betNumber,
         color,
       });
-      const roulette = await Roulette.findById(rouletteId);
       roulette.betIDs.push(bet._id);
       await roulette.save({ validateBeforeSAve: false});
       res.status(201).json({message: 'bet created succesfully'});
