@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose');
 const rouletteSquema = new Schema({
   state: {
     type: Boolean,
-    required: [ true, 'Roulette state is required' ],
+    default: false,
   },
   betIDs: {
     type: [{type: Schema.Types.ObjectId, ref: 'Bet'}]

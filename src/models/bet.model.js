@@ -1,13 +1,13 @@
 const { Schema, model, models } = require('mongoose');
 
 const betSchema =new Schema({
-  userID: {
+  userId: {
     type: String,
     required: [ true, 'userID is required' ],
   },
   amount: {
     type: Number,
-    min: [ 1, 'Not enoguh money' ],
+    min: [ 1, 'Not enough money' ],
     max: [ 10000, 'Maximun amount 10K' ],
   },
   betNumber: {
