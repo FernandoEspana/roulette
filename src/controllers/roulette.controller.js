@@ -1,4 +1,3 @@
-const { listenerCount } = require('../models/roulette.model');
 const Roulette = require('../models/roulette.model');
 const { randomNumber, returnColor } = require('../utils/bet-process');
 
@@ -11,7 +10,7 @@ module.exports = {
         rouletteId: `${ roulette._id }`,
       })
     } catch (error) {
-      res.status(400).json({ message: error });
+      res.status(401).json({ message: error });
     }
   },
   async open(req, res) {
