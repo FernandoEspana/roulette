@@ -10,7 +10,7 @@ module.exports = {
         rouletteId: `${ roulette._id }`,
       })
     } catch (error) {
-      res.status(400).json({ message: error });
+      res.status(401).json({ message: error });
     }
   },
   async open(req, res) {
@@ -54,4 +54,12 @@ module.exports = {
       res.status(400).json({message: 'Roulette did not found'});
     }
   },
+  async list(req, res) {
+    try {
+      const roulettes = await Roulette.find().populate('betIDs');
+      res.status(200).json(roulettes); 
+    } catch (error) {
+      res.status(400).json({ message: 'Roulettes request present some error'});
+    }
+  }
 }
